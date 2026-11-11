@@ -38,7 +38,6 @@ Course project: CSE 3206, Software Engineering Laboratory.
 | Backend | Node.js, Express 5, Socket.IO, JWT, bcryptjs, helmet, express-rate-limit, multer, web-push, nodemailer |
 | Database | MySQL (TiDB Cloud in production, MariaDB/XAMPP locally) |
 | Hosting | Render (app) and TiDB Cloud (database), deployed from GitHub |
-| Tests | node:test (103 integration tests), oxlint |
 
 ## Project structure
 
