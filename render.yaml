@@ -1,0 +1,39 @@
+# Render blueprint: the whole project (website + API) as one free web service.
+# Create it with "New > Blueprint" and point it at your repository.
+services:
+  - type: web
+    name: microservicehub
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm --prefix backend install && npm run build
+    startCommand: npm --prefix backend start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: TRUST_PROXY
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_SSL
+        value: "true"
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      # The public address Render gives the service, e.g. https://microservicehub.onrender.com
+      - key: APP_URL
+        sync: false
+      - key: API_PUBLIC_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      # The first admin on a brand new, empty database is made from INITIAL_ADMIN_EMAIL and
+      # INITIAL_ADMIN_PASSWORD. Add them in the dashboard for the very first start only, then
+      # delete them. They are not listed here so a Blueprint sync never brings them back.
