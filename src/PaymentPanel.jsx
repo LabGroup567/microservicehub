@@ -4,8 +4,8 @@ import { Feedback, Loading, Modal, StatusBadge, useActions, useLoad } from './ui
 import { DisputeButton } from './Disputes.jsx';
 import Icon from './Icon.jsx';
 
-export const METHOD_LABEL = { cash: 'Cash on delivery', bkash: 'bKash', nagad: 'Nagad' };
-const METHOD_ICON = { cash: <Icon name="cash" />, bkash: <Icon name="mobile" />, nagad: <Icon name="mobile" /> };
+export const METHOD_LABEL = { cash: 'Cash on delivery', nagad: 'Nagad' };
+const METHOD_ICON = { cash: <Icon name="cash" />, nagad: <Icon name="mobile" /> };
 
 const ESCROW_TEXT = {
   held: 'Held safely by MicroServiceHub. It is released to the provider when you mark the job complete.',
@@ -13,12 +13,6 @@ const ESCROW_TEXT = {
   released: 'Released to the provider.',
   refunded: 'Refunded to the seeker.',
 };
-
-// bKash sends the customer back with ?payment=success or ?payment=failed.
-function returnState() {
-  const state = new URLSearchParams(window.location.search).get('payment');
-  return state === 'success' || state === 'failed' ? state : '';
-}
 
 /** Pay for (or confirm payment of) one work or booking. Props: { workId } or { bookingId }. */
 export function PaymentPanel({ workId, bookingId, onChange }) {
@@ -33,10 +27,6 @@ export function PaymentPanel({ workId, bookingId, onChange }) {
   const [method, setMethod] = useState('');
   const [trx, setTrx] = useState('');
   const [sender, setSender] = useState('');
-  const [promo, setPromo] = useState('');
-  const [quote, setQuote] = useState(null);
-  const [promoError, setPromoError] = useState('');
-  const back = returnState();
 
   if (loading && !data) return <Loading />;
   if (!data) return <Feedback error={error} />;
@@ -45,29 +35,6 @@ export function PaymentPanel({ workId, bookingId, onChange }) {
   const open = payments.find((payment) => payment.status === 'pending' || payment.status === 'paid');
   const lastFailed = !open ? payments.find((payment) => payment.status === 'failed') : null;
   const choices = Object.keys(METHOD_LABEL).filter((key) => (key === 'cash' ? methods.cash : methods[key]));
-
-  async function applyPromo(event) {
-    event?.preventDefault();
-    setPromoError('');
-    try {
-      const result = await apiFetch(`/payments/quote?${query}${promo.trim() ? `&promo_code=${encodeURIComponent(promo.trim())}` : ''}`);
-      setQuote(result.quote);
-    } catch (err) {
-      setQuote(null);
-      setPromoError(err.message);
-    }
-  }
-
-  async function payOnline() {
-    const body = { [workId ? 'work_id' : 'booking_id']: workId || bookingId };
-    if (promo.trim() && !promoError) body.promo_code = promo.trim();
-
-    await actions.run(async () => {
-      const result = await apiFetch('/payments/bkash/start', { method: 'POST', body });
-      window.location.href = result.redirect_url;
-      return result;
-    }, 'Opening bKash...');
-  }
 
   async function submit(event) {
     event.preventDefault();
@@ -95,7 +62,7 @@ export function PaymentPanel({ workId, bookingId, onChange }) {
         <strong>{formatMoney(amount)}</strong>
       </div>
 
-      <Feedback error={actions.error || (back === 'failed' ? 'The online payment did not go through. You were not charged, or the payment was cancelled.' : '')} notice={actions.notice || (back === 'success' ? 'Payment received. Thank you!' : '')} />
+      <Feedback error={actions.error} notice={actions.notice} />
 
       {open && (
         <div className={`pay-state ${open.status}`}>
@@ -160,34 +127,6 @@ export function PaymentPanel({ workId, bookingId, onChange }) {
         <p className="quote">Payment opens once the provider is hired or the booking is accepted.</p>
       )}
 
-      {role === 'payer' && !open && payable && data.online?.bkash && (
-        <div className="pay-online">
-          <div className="card-row">
-            <b><Icon name="mobile" /> Pay online with bKash</b>
-            <span className="badge">Protected</span>
-          </div>
-          <p className="quote">Your money is held safely and only released to {providerName} after you mark the job complete.</p>
-
-          <form className="promo-row" onSubmit={applyPromo}>
-            <input value={promo} onChange={(event) => { setPromo(event.target.value); setQuote(null); }} placeholder="Promo code (optional)" maxLength={30} aria-label="Promo code" />
-            <button type="submit" className="btn btn-soft btn-sm">Apply</button>
-          </form>
-          {promoError && <small className="field-error">{promoError}</small>}
-
-          <div className="pay-breakdown">
-            <span>Price</span><b>{formatMoney(quote ? quote.amount : amount)}</b>
-            {(quote ? quote.fee > 0 : data.fee_percent > 0) && (<><span>Service fee ({quote ? quote.fee_percent : data.fee_percent}%)</span><b>{formatMoney(quote ? quote.fee : (Number(amount) * data.fee_percent) / 100)}</b></>)}
-            {quote && quote.discount > 0 && (<><span>Promo {quote.promo_code}</span><b>- {formatMoney(quote.discount)}</b></>)}
-            <span>You pay</span><b>{formatMoney(quote ? quote.total : Number(amount) * (1 + data.fee_percent / 100))}</b>
-          </div>
-
-          <button type="button" className="btn" disabled={actions.busy} onClick={payOnline}>
-            {actions.busy ? 'Opening bKash...' : 'Pay with bKash'}
-          </button>
-          <p className="or-line"><span>or pay directly</span></p>
-        </div>
-      )}
-
       {role === 'payer' && !open && payable && (
         <form className="form" onSubmit={submit}>
           <div className="pay-methods" role="radiogroup" aria-label="Payment method">
@@ -210,7 +149,7 @@ export function PaymentPanel({ workId, bookingId, onChange }) {
             <p className="quote">Pay {providerName} in cash when the work is delivered. They confirm once they receive it.</p>
           )}
 
-          {(method === 'bkash' || method === 'nagad') && (
+          {method === 'nagad' && (
             <>
               <p className="quote">
                 Send <b>{formatMoney(amount)}</b> to <b>{providerName}</b> on {METHOD_LABEL[method]}:{' '}

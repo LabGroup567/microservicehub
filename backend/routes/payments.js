@@ -3,22 +3,19 @@ const express = require('express');
 const db = require('../db');
 const { requireAuth, requireRole } = require('../auth');
 const { fail, toId, str, notify } = require('../helpers');
-const bkash = require('../gateways/bkash');
-const { appLink } = require('../mailer');
-const { quote, getNumber, rewardReferrer, jobIsCompleted, releaseForJob } = require('../money');
+const { quote, getNumber } = require('../money');
 
 const router = express.Router();
 
 /**
  * Payment methods. "manual" methods work today: the seeker pays the provider
- * directly (cash, or a bKash / Nagad send-money transfer) and the provider
+ * directly (cash, or a Nagad send-money transfer) and the provider
  * confirms receipt. To add a real online gateway later, give a method
  * `mode: 'online'` and create/verify the checkout in createPayment() and a
  * webhook route; the rest of the flow (statuses, notifications, UI) stays.
  */
 const METHODS = {
   cash: { label: 'Cash on delivery', mode: 'manual' },
-  bkash: { label: 'bKash', mode: 'manual' },
   nagad: { label: 'Nagad', mode: 'manual' },
 };
 
@@ -33,7 +30,7 @@ function normalizeMobile(value) {
 
 router.get('/payment-settings', requireAuth, requireRole('provider'), async (req, res) => {
   const [[row]] = await db.query(
-    'SELECT accepts_cash, bkash_number, nagad_number FROM users WHERE id = ?',
+    'SELECT accepts_cash, nagad_number FROM users WHERE id = ?',
     [req.user.id]
   );
 
@@ -41,7 +38,6 @@ router.get('/payment-settings', requireAuth, requireRole('provider'), async (req
     success: true,
     settings: {
       accepts_cash: !!row.accepts_cash,
-      bkash_number: row.bkash_number || '',
       nagad_number: row.nagad_number || '',
     },
   });
@@ -49,20 +45,14 @@ router.get('/payment-settings', requireAuth, requireRole('provider'), async (req
 
 router.put('/payment-settings', requireAuth, requireRole('provider'), async (req, res) => {
   const acceptsCash = req.body.accepts_cash ? 1 : 0;
-  const rawBkash = str(req.body.bkash_number, 30);
   const rawNagad = str(req.body.nagad_number, 30);
 
-  const bkash = rawBkash ? normalizeMobile(rawBkash) : null;
   const nagad = rawNagad ? normalizeMobile(rawNagad) : null;
 
-  if (rawBkash && !bkash) fail(400, 'Enter a valid bKash number (e.g. 01XXXXXXXXX).');
   if (rawNagad && !nagad) fail(400, 'Enter a valid Nagad number (e.g. 01XXXXXXXXX).');
-  if (!acceptsCash && !bkash && !nagad) fail(400, 'Accept at least one payment method.');
+  if (!acceptsCash && !nagad) fail(400, 'Accept at least one payment method.');
 
-  await db.query(
-    'UPDATE users SET accepts_cash = ?, bkash_number = ?, nagad_number = ? WHERE id = ?',
-    [acceptsCash, bkash, nagad, req.user.id]
-  );
+  await db.query('UPDATE users SET accepts_cash = ?, nagad_number = ? WHERE id = ?', [acceptsCash, nagad, req.user.id]);
 
   res.json({ success: true, message: 'Payment settings saved.' });
 });
@@ -137,7 +127,7 @@ router.get('/payments/for', requireAuth, async (req, res) => {
   );
 
   const [[provider]] = await db.query(
-    `SELECT full_name, accepts_cash, bkash_number, nagad_number FROM users WHERE id = ?`,
+    `SELECT full_name, accepts_cash, nagad_number FROM users WHERE id = ?`,
     [ctx.payeeId]
   );
 
@@ -149,11 +139,9 @@ router.get('/payments/for', requireAuth, async (req, res) => {
     payments,
     methods: {
       cash: !!provider.accepts_cash,
-      bkash: provider.bkash_number || null,
       nagad: provider.nagad_number || null,
     },
-    // Online bKash needs the gateway to be set up and a provider bKash number to pay out to.
-    online: { bkash: bkash.enabled() && !!provider.bkash_number },
+    online: {},
     fee_percent: await getNumber('fee_percent', 0),
     provider_name: provider.full_name,
   });
@@ -177,14 +165,13 @@ router.post('/payments', requireAuth, requireRole('seeker'), async (req, res) =>
   if (!ctx.payable) fail(409, 'Payment opens once the work is hired or the booking is accepted.');
 
   const [provider] = await db.query(
-    'SELECT accepts_cash, bkash_number, nagad_number FROM users WHERE id = ?',
+    'SELECT accepts_cash, nagad_number FROM users WHERE id = ?',
     [ctx.payeeId]
   );
   const p = provider[0];
 
   const offered =
     (method === 'cash' && p.accepts_cash) ||
-    (method === 'bkash' && p.bkash_number) ||
     (method === 'nagad' && p.nagad_number);
   if (!offered) fail(400, `This provider does not accept ${METHODS[method].label}.`);
 
@@ -283,138 +270,6 @@ router.patch('/payments/:id/reject', requireAuth, requireRole('provider'), (req,
   decide(req, res, 'failed')
 );
 
-
-// ---------- Online bKash (gateway) ----------
-
-const API_PUBLIC_URL = () => (process.env.API_PUBLIC_URL || 'http://localhost:5000').replace(/\/$/, '');
-
-const returnPath = (payment) => (payment.service_id ? `/work/${payment.service_id}` : '/my-bookings');
-const backToApp = (res, path, state) => res.redirect(`${appLink(path)}?payment=${state}`);
-
-router.post('/payments/bkash/start', requireAuth, requireRole('seeker'), async (req, res) => {
-  if (!bkash.enabled()) fail(409, 'Online bKash payments are not set up yet.');
-
-  const ctx = await loadContext(req.body);
-  if (ctx.payerId !== req.user.id) fail(404, 'Not found.');
-  if (!ctx.payable) fail(409, 'Payment opens once the work is hired or the booking is accepted.');
-
-  const [[provider]] = await db.query('SELECT full_name, bkash_number FROM users WHERE id = ?', [ctx.payeeId]);
-  if (!provider.bkash_number) fail(409, 'This provider has not set a bKash number to receive money.');
-
-  const column = ctx.kind === 'work' ? 'service_id' : 'booking_id';
-  const target = ctx.kind === 'work' ? ctx.serviceId : ctx.bookingId;
-
-  const [open] = await db.query(`SELECT id FROM payments WHERE ${column} = ? AND status IN ('pending', 'paid')`, [target]);
-  if (open.length) fail(409, 'A payment already exists for this job. Wait for it to finish or be rejected.');
-
-  const price = await quote({ amount: ctx.amount, promoCode: str(req.body.promo_code, 30), userId: req.user.id });
-
-  const [inserted] = await db.query(
-    `INSERT INTO payments (service_id, booking_id, payer_id, payee_id, amount, method, gateway,
-                           fee_amount, discount_amount, promo_code, charged_amount)
-     VALUES (?, ?, ?, ?, ?, 'bkash', 'bkash', ?, ?, ?, ?)`,
-    [ctx.serviceId, ctx.bookingId, req.user.id, ctx.payeeId, ctx.amount, price.fee, price.discount, price.promo_code, price.total]
-  );
-  const paymentId = inserted.insertId;
-
-  try {
-    const created = await bkash.createPayment({
-      amount: price.total,
-      invoice: `MSH${paymentId}`,
-      payerReference: req.user.phone || String(req.user.id),
-      callbackURL: `${API_PUBLIC_URL()}/api/payments/bkash/callback?payment=${paymentId}`,
-    });
-
-    await db.query('UPDATE payments SET gateway_ref = ? WHERE id = ?', [created.paymentID, paymentId]);
-    res.status(201).json({ success: true, redirect_url: created.bkashURL, payment_id: paymentId });
-  } catch (error) {
-    await db.query("UPDATE payments SET status = 'failed', note = ? WHERE id = ?", [`Could not start: ${error.message}`.slice(0, 255), paymentId]);
-    console.error('bKash start failed:', error.message);
-    fail(502, 'bKash could not start the payment. Please try again, or pay manually.');
-  }
-});
-
-// bKash sends the customer's browser back here. Nothing in the URL is trusted: the payment
-// is only marked paid after asking bKash itself, and the amount has to match.
-router.get('/payments/bkash/callback', async (req, res) => {
-  const id = toId(req.query.payment);
-  const gatewayRef = str(req.query.paymentID, 80);
-  const outcome = str(req.query.status, 20);
-
-  const [rows] = id ? await db.query("SELECT * FROM payments WHERE id = ? AND gateway = 'bkash'", [id]) : [[]];
-  const payment = rows[0];
-
-  if (!payment || !gatewayRef || payment.gateway_ref !== gatewayRef) return backToApp(res, '/', 'failed');
-
-  const back = (state) => backToApp(res, returnPath(payment), state);
-
-  if (payment.status === 'paid') return back('success');
-  if (payment.status !== 'pending') return back('failed');
-
-  const fail_ = async (note) => {
-    await db.query("UPDATE payments SET status = 'failed', note = ? WHERE id = ? AND status = 'pending'", [note.slice(0, 255), payment.id]);
-    return back('failed');
-  };
-
-  if (outcome !== 'success') return fail_(outcome === 'cancel' ? 'Cancelled in bKash.' : 'Payment failed in bKash.');
-
-  let result;
-  try {
-    result = await bkash.executePayment(gatewayRef);
-  } catch (error) {
-    // It may already have been executed (for example the page was refreshed): ask bKash.
-    try {
-      result = await bkash.queryPayment(gatewayRef);
-    } catch {
-      console.error('bKash execute failed:', error.message);
-      return fail_('bKash could not confirm the payment.');
-    }
-  }
-
-  const completed = result.transactionStatus === 'Completed';
-  const amountOk = result.amount === undefined || Number(result.amount) === Number(payment.charged_amount ?? payment.amount);
-
-  if (!completed) return fail_(`bKash status: ${result.transactionStatus || 'unknown'}.`);
-  if (!amountOk) return fail_('The paid amount did not match the amount due.');
-
-  // The WHERE clause makes this succeed for one request only, so notifications go out once.
-  const [updated] = await db.query(
-    `UPDATE payments SET status = 'paid', trx_id = ?, paid_at = NOW(), escrow_status = 'held'
-     WHERE id = ? AND status = 'pending'`,
-    [result.trxID || null, payment.id]
-  );
-
-  if (updated.affectedRows) {
-    const [[info]] = await db.query(
-      `SELECT COALESCE(s.title, ps.title) AS title FROM payments p
-       LEFT JOIN services s ON s.id = p.service_id
-       LEFT JOIN bookings b ON b.id = p.booking_id
-       LEFT JOIN provider_services ps ON ps.id = b.provider_service_id WHERE p.id = ?`,
-      [payment.id]
-    );
-    const link = payment.service_id ? `/work/${payment.service_id}` : '/my-bookings';
-
-    if (payment.promo_code) await db.query('UPDATE promo_codes SET used_count = used_count + 1 WHERE code = ?', [payment.promo_code]);
-    await rewardReferrer(payment.payer_id);
-
-    await notify(payment.payer_id, 'payment_status', 'Payment received', `Your bKash payment of BDT ${payment.charged_amount ?? payment.amount} for "${info.title}" went through.`, link);
-    await notify(
-      payment.payee_id,
-      'payment_status',
-      'Online payment received',
-      `BDT ${payment.amount} was paid by bKash for "${info.title}". It is held safely and released to you when the seeker confirms the work is done.`,
-      payment.service_id ? `/work/${payment.service_id}` : '/provider-bookings'
-    );
-  }
-
-  // If the job was already finished when the payment arrived, nothing is left to wait for.
-  if (updated.affectedRows) {
-    const job = { serviceId: payment.service_id, bookingId: payment.booking_id };
-    if (await jobIsCompleted(job)) await releaseForJob(job);
-  }
-
-  return back('success');
-});
 
 // ---------- History ----------
 

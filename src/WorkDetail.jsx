@@ -397,7 +397,7 @@ export default function WorkDetail() {
             ['assigned', 'in_progress', 'completed'].includes(work.status) && (
               <section className="panel">
                 <h2>Payment</h2>
-                <p className="sub">Pay by cash on delivery, bKash or Nagad.</p>
+                <p className="sub">Pay by cash on delivery or Nagad.</p>
                 <PaymentPanel workId={work.id} />
               </section>
             )}

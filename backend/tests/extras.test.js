@@ -93,10 +93,10 @@ test('earnings: totals, escrow, payouts and six months of history', async () => 
 
   await add(500, { status: 'paid' });                                                 // cash received
   await add(300, { status: 'pending' });                                              // waiting for the provider to confirm
-  await add(1000, { status: 'paid', gateway: 'bkash', method: 'bkash', escrow: 'held' });          // held in escrow
-  await add(200, { status: 'paid', gateway: 'bkash', method: 'bkash', escrow: 'released', payout: 'due' });
-  await add(400, { status: 'paid', gateway: 'bkash', method: 'bkash', escrow: 'released', payout: 'paid_out' });
-  await add(999, { status: 'refunded', gateway: 'bkash', method: 'bkash', escrow: 'refunded' }); // never counted
+  await add(1000, { status: 'paid', gateway: 'online', method: 'nagad', escrow: 'held' });          // held in escrow
+  await add(200, { status: 'paid', gateway: 'online', method: 'nagad', escrow: 'released', payout: 'due' });
+  await add(400, { status: 'paid', gateway: 'online', method: 'nagad', escrow: 'released', payout: 'paid_out' });
+  await add(999, { status: 'refunded', gateway: 'online', method: 'nagad', escrow: 'refunded' }); // never counted
 
   const result = await t.api('GET', '/provider/earnings', earner.token);
   assert.equal(result.totals.received, 1100, 'cash 500 + released 200 + paid out 400');

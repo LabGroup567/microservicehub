@@ -18,7 +18,7 @@ export default function Payments() {
 
   return (
     <div className="pg">
-      <PageHead title="Payments" subtitle="Cash, bKash and Nagad payments for your work and bookings." />
+      <PageHead title="Payments" subtitle="Cash and Nagad payments for your work and bookings." />
 
       <Feedback error={error} />
 

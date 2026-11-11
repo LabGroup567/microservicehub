@@ -43,12 +43,12 @@ async function acceptedBooking(customer = seeker) {
   return booked.booking_id;
 }
 
-// A paid online payment held in escrow, as the bKash callback leaves it.
+// A paid online payment held in escrow, as an online payment would leave it.
 async function heldPayment(bookingId, amount = 1000) {
   const [result] = await t.db.query(
     `INSERT INTO payments (booking_id, payer_id, payee_id, amount, method, status, gateway, gateway_ref, trx_id,
                            charged_amount, escrow_status, paid_at)
-     VALUES (?, ?, ?, ?, 'bkash', 'paid', 'bkash', ?, ?, ?, 'held', NOW())`,
+     VALUES (?, ?, ?, ?, 'nagad', 'paid', 'online', ?, ?, ?, 'held', NOW())`,
     [bookingId, seeker.id, provider.id, amount, `PID${rand()}`, `T${rand()}${rand()}`.toUpperCase(), amount]
   );
   return result.insertId;
@@ -147,7 +147,7 @@ test('quotes add the fee on top and apply promo codes', async () => {
   await t.db.query('UPDATE promo_codes SET used_count = 1 WHERE code = ?', [percent]);
   assert.equal((await t.api('GET', `/payments/quote?booking_id=${bookingId}&promo_code=${percent}`, seeker.token)).status, 400);
 
-  await t.db.query("INSERT INTO payments (booking_id, payer_id, payee_id, amount, method, status, promo_code) VALUES (?, ?, ?, 1000, 'bkash', 'pending', ?)", [bookingId, seeker.id, provider.id, fixed]);
+  await t.db.query("INSERT INTO payments (booking_id, payer_id, payee_id, amount, method, status, promo_code) VALUES (?, ?, ?, 1000, 'nagad', 'pending', ?)", [bookingId, seeker.id, provider.id, fixed]);
   assert.equal((await t.api('GET', `/payments/quote?booking_id=${bookingId}&promo_code=${fixed}`, seeker.token)).status, 400);
 
   // A discount can never make the payment free.

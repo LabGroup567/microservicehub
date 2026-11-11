@@ -42,16 +42,10 @@ export default function PaymentSettings() {
           </span>
         </label>
 
-        <div className="form-row">
-          <label className="field">
-            <span><Icon name="mobile" /> bKash number</span>
-            <input value={form.bkash_number} onChange={set('bkash_number')} inputMode="tel" placeholder="01XXXXXXXXX (leave empty to disable)" />
-          </label>
-          <label className="field">
-            <span><Icon name="mobile" /> Nagad number</span>
-            <input value={form.nagad_number} onChange={set('nagad_number')} inputMode="tel" placeholder="01XXXXXXXXX (leave empty to disable)" />
-          </label>
-        </div>
+        <label className="field">
+          <span><Icon name="mobile" /> Nagad number</span>
+          <input value={form.nagad_number} onChange={set('nagad_number')} inputMode="tel" placeholder="01XXXXXXXXX (leave empty to disable)" />
+        </label>
 
         <div>
           <button className="btn" disabled={busy}>

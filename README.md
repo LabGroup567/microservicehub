@@ -15,7 +15,7 @@ Course project: CSE 3206, Software Engineering Laboratory.
 
 **Trust and money**
 - Every user is verified with a NID (or birth certificate under 18) and a selfie. An admin approves or rejects.
-- Cash, bKash and Nagad payments are confirmed by the provider. Online bKash payments are held in escrow until the seeker confirms the job. Disputes freeze the money until an admin decides.
+- Cash and Nagad payments are confirmed by the provider. Escrow, disputes, platform fee and promo codes are built into the backend and ready for an online payment gateway, which is not connected yet.
 - Platform fee, promo codes and referral codes.
 
 **Communication and location**
@@ -38,7 +38,7 @@ Course project: CSE 3206, Software Engineering Laboratory.
 | Backend | Node.js, Express 5, Socket.IO, JWT, bcryptjs, helmet, express-rate-limit, multer, web-push, nodemailer |
 | Database | MySQL (TiDB Cloud in production, MariaDB/XAMPP locally) |
 | Hosting | Render (app) and TiDB Cloud (database), deployed from GitHub |
-| Tests | node:test (114 integration tests), oxlint |
+| Tests | node:test (103 integration tests), oxlint |
 
 ## Project structure
 
@@ -95,7 +95,7 @@ Settings live in `backend/.env` (see `backend/.env.example`). The most important
 
 The frontend reads `VITE_API_URL` (default `http://localhost:5000`).
 
-Real bKash payments, email and SMS need accounts at those providers. Without them the app still works: users pay the provider directly and the provider confirms.
+An online payment gateway, email and SMS need accounts at those providers. Without them the app still works: users pay the provider directly and the provider confirms.
 
 ## Tests
 
@@ -112,7 +112,7 @@ The project deploys as one Render web service (the Express server also serves th
 
 ## Known limitations
 
-- Online bKash is tested with a simulated gateway until a merchant account is connected.
+- No online payment gateway is connected yet, so escrow, fees and promo codes have no payments to act on.
 - Payouts to providers are recorded as due and paid by an admin.
 - The interface is in English only.
 - The free hosting sleeps when idle.

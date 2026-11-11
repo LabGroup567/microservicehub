@@ -19,7 +19,7 @@ export default function Landing() {
           <h1>Everyday help, <em>one click away</em></h1>
           <p>
             Post a job or book a service. Verified providers apply, you chat, hire and pay safely with
-            cash, bKash or Nagad.
+            cash or Nagad.
           </p>
           <div className="land-cta">
             <button className="btn" onClick={() => navigate('/register')}>Get started free</button>
@@ -27,7 +27,6 @@ export default function Landing() {
           </div>
           <ul className="land-points">
             <li><Icon name="check" /> Every member ID-verified</li>
-            <li><Icon name="check" /> Online payments held until the job is done</li>
             <li><Icon name="check" /> Live location and in-app calls</li>
           </ul>
         </div>

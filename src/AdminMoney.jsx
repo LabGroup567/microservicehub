@@ -40,7 +40,7 @@ export function AdminPayments() {
   };
 
   function payout(payment) {
-    const note = window.prompt(`Send ${formatMoney(payment.amount)} to ${payment.payee_name} on bKash ${payment.payee_bkash || '(no number saved)'}. Then add your bKash TrxID here (optional):`, '');
+    const note = window.prompt(`Pay ${formatMoney(payment.amount)} to ${payment.payee_name} on Nagad ${payment.payee_nagad || '(no number saved)'}. Then add the transaction ID here (optional):`, '');
     if (note === null) return;
     actions.run(() => apiFetch(`/admin/payments/${payment.id}/payout`, { method: 'PATCH', body: { note } }), 'Payout marked as sent.');
   }
@@ -261,7 +261,7 @@ export function AdminFees() {
           <h2>Service fee and rewards</h2>
           <p className="quote">
             The service fee is added on top of the price when a seeker pays online. The provider always receives the full price.
-            Cash, bKash and Nagad payments sent directly to a provider carry no fee, because the platform never holds that money.
+            Cash and Nagad payments sent directly to a provider carry no fee, because the platform never holds that money.
           </p>
           <form className="form" onSubmit={saveSettings}>
             <div className="form-row">

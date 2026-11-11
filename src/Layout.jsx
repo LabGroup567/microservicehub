@@ -346,7 +346,7 @@ export default function Layout() {
             <ul className="footer-trust">
               <li><Icon name="check" /> ID-verified members</li>
               <li><Icon name="check" /> Payments held until done</li>
-              <li><Icon name="check" /> Cash, bKash or Nagad</li>
+              <li><Icon name="check" /> Cash or Nagad</li>
             </ul>
           </div>
 

@@ -8,7 +8,7 @@ function describe(payment) {
     if (payment.escrow_status === 'held') return 'Held until the job is confirmed';
     if (payment.escrow_status === 'disputed') return 'On hold: dispute open';
     if (payment.payout_status === 'due') return 'Released, payout on its way';
-    if (payment.payout_status === 'paid_out') return 'Paid out to your bKash';
+    if (payment.payout_status === 'paid_out') return 'Paid out to you';
   }
   return 'Received';
 }
@@ -22,7 +22,7 @@ export default function Earnings() {
         ['Received', data.totals.received, 'Money you have been paid', true],
         ['Waiting for your confirmation', data.totals.to_confirm, 'Confirm when you get it'],
         ['Held safely', data.totals.in_escrow, 'Released after the job is confirmed'],
-        ['Payout on its way', data.totals.payout_due, 'Sent to your bKash soon'],
+        ['Payout on its way', data.totals.payout_due, 'Paid out by an admin soon'],
       ]
     : [];
 

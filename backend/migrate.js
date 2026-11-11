@@ -152,7 +152,7 @@ async function ensureSchema() {
       payer_id INT NOT NULL,
       payee_id INT NOT NULL,
       amount DECIMAL(10,2) NOT NULL,
-      method ENUM('cash','bkash','nagad') NOT NULL,
+      method ENUM('cash','nagad') NOT NULL,
       status ENUM('pending','paid','failed','refunded') NOT NULL DEFAULT 'pending',
       trx_id VARCHAR(40) DEFAULT NULL,
       sender_number VARCHAR(20) DEFAULT NULL,
@@ -557,7 +557,6 @@ async function ensureSchema() {
   await addColumn('users', 'is_main_admin', 'TINYINT(1) NOT NULL DEFAULT 0');
   await addColumn('users', 'phone_visible', 'TINYINT(1) NOT NULL DEFAULT 0');
   await addColumn('users', 'accepts_cash', 'TINYINT(1) NOT NULL DEFAULT 1');
-  await addColumn('users', 'bkash_number', 'VARCHAR(20) DEFAULT NULL');
   await addColumn('users', 'nagad_number', 'VARCHAR(20) DEFAULT NULL');
   await addColumn('users', 'kyc_status', "ENUM('none','pending','verified','rejected') NOT NULL DEFAULT 'none'");
   await addColumn('users', 'kyc_reason', 'VARCHAR(255) DEFAULT NULL');

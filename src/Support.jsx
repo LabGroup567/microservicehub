@@ -45,7 +45,7 @@ export default function Support() {
             <b>I cannot post or apply.</b> Verify your NID first (Profile menu, Identity verification).
           </li>
           <li>
-            <b>My payment is not confirmed.</b> The provider confirms bKash, Nagad and cash payments. Chat with them from the booking or work page.
+            <b>My payment is not confirmed.</b> The provider confirms Nagad and cash payments. Chat with them from the booking or work page.
           </li>
           <li>
             <b>Someone is behaving badly.</b> Use the Report button on their work, listing or profile.

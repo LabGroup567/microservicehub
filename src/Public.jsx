@@ -97,7 +97,7 @@ export function HowItWorks() {
             <li><b>Verify your identity.</b> Upload your NID and a selfie once. Under 18? Use your birth certificate instead. An admin checks it.</li>
             <li><b>Post your work or book a service.</b> Describe the job and your budget, or pick a provider and a free day on their calendar.</li>
             <li><b>Choose and chat.</b> Providers apply. Compare them, chat in the app and hire the one you like.</li>
-            <li><b>Pay safely.</b> Pay cash or by bKash or Nagad directly, or pay online and we hold the money until the job is done.</li>
+            <li><b>Pay safely.</b> Pay cash or by Nagad directly to the provider.</li>
             <li><b>Confirm and review.</b> Mark the job complete and write a short review.</li>
           </ol>
         </section>
@@ -158,8 +158,8 @@ export function Safety() {
         <ul className="pub-list">
           <li>Prefer <b>online payment</b>: the money is held until you confirm the work is done.</li>
           <li>Never pay a provider outside the app for a job you booked through it, and never send money to someone who asks you to "pay first" for a reason that sounds odd.</li>
-          <li>We never ask for your bKash or Nagad PIN or OTP. Do not share them with anyone, including us.</li>
-          <li>When you pay directly by bKash or Nagad, keep the TrxID message.</li>
+          <li>We never ask for your Nagad PIN or OTP. Do not share them with anyone, including us.</li>
+          <li>When you pay directly by Nagad, keep the TrxID message.</li>
         </ul>
       </Section>
       <Section title="If something goes wrong">
@@ -175,9 +175,8 @@ const FAQ = [
   ['Why do I need to verify my NID?', 'It keeps the community safe. Seekers and providers can see that the other side is a real, verified person. Your NID details and photos are visible only to you and to MicroServiceHub admins who review them.'],
   ['I am under 18. Can I join?', 'Yes, from age 13. If you are under 18 you verify with your birth certificate and a selfie instead of an NID. The same privacy rules apply: only you and the admins who review it can see your documents.'],
   ['How long does verification take?', 'An admin reviews each submission. You get a notification when it is approved or when we need a clearer photo.'],
-  ['How do I pay?', 'You can pay cash on delivery, send money by bKash or Nagad to the provider and enter the TrxID, or pay online by bKash when the provider accepts it. Open the job and choose Payment.'],
+  ['How do I pay?', 'You can pay cash on delivery, or send money by Nagad to the provider and enter the TrxID. Open the job and choose Payment.'],
   ['What is the service fee?', 'Online payments may carry a small service fee that is shown before you pay. The provider always receives the full price. Payments you send straight to a provider have no fee.'],
-  ['When does the provider get paid for an online payment?', 'The money is held by MicroServiceHub. When you mark the job complete it is released and sent to the provider\'s bKash number.'],
   ['What if the provider does not show up?', 'Open the payment screen and choose Report a problem. Any online payment stays on hold, an admin looks at both sides, and you can be refunded.'],
   ['Can I cancel?', 'You can cancel a booking or work post before it starts, from My bookings or My work.'],
   ['How do promo and referral codes work?', 'Enter a code on the online payment screen to lower the total. Share your referral code from Invite friends: your friend gets a welcome code and you get a reward after their first online payment.'],
@@ -222,7 +221,7 @@ export function About() {
         <ul className="pub-list">
           <li><b>Trust first.</b> Verified identities, honest reviews and a fair way to settle problems.</li>
           <li><b>Fair for providers.</b> Providers set their price and keep it. Online payments are protected so they are not left unpaid.</li>
-          <li><b>Simple for everyone.</b> Plain English, works on a phone, and uses the payment methods people already use: cash, bKash and Nagad.</li>
+          <li><b>Simple for everyone.</b> Plain English, works on a phone, and uses the payment methods people already use: cash and Nagad.</li>
         </ul>
       </Section>
       <p className="pub-note">Questions or ideas? <Link to="/contact">We would love to hear from you</Link>.</p>
@@ -307,9 +306,8 @@ export function Terms() {
       <Section title="4. Jobs, prices and payments">
         <ul className="pub-list">
           <li>The seeker and provider agree the job, price and time between themselves. The provider sets the price of a listed service.</li>
-          <li><b>Direct payments</b> (cash, or bKash or Nagad sent to the provider) are between the seeker and the provider. MicroServiceHub does not hold that money and takes no fee on it.</li>
+          <li><b>Direct payments</b> (cash, or Nagad sent to the provider) are between the seeker and the provider. MicroServiceHub does not hold that money and takes no fee on it.</li>
           <li><b>Online payments</b> are collected by MicroServiceHub and held in escrow. They are released to the provider after the seeker marks the job complete, or after an admin decides a dispute. A service fee may be added to the price and is shown before you pay. The provider receives the full agreed price.</li>
-          <li>Payouts to providers and refunds to seekers are sent by MicroServiceHub to the bKash number on file and can take some time to process.</li>
           <li>Promo and referral codes have no cash value, may expire, and can be changed or withdrawn.</li>
         </ul>
       </Section>
@@ -342,7 +340,7 @@ export function Privacy() {
           <li><b>Activity:</b> work posts, listings, applications, bookings, messages, reviews, payments and reports.</li>
           <li><b>Location:</b> only when you choose to share your live location during a job. It stops when you stop sharing, or by itself after two hours. The person you share with can see it, and so can MicroServiceHub admins, who use it only to keep people safe and to help in an emergency or a dispute. Providers can also switch on "Available now". Then an approximate location (rounded to about 500 metres, never the exact spot) is shown to seekers on a map while the provider has the app open. After the app is closed, the last approximate spot stays on the map as "last seen" for up to 3 hours and is then removed. The provider can switch it off at any time and it disappears at once.</li>
           <li><b>Blood donor details:</b> if you join the donor list, your blood group, area, and the date you last gave blood. Your phone number is shown only if you choose to share it, or to a family you offer to help. You can leave the list at any time and the record is deleted.</li>
-          <li><b>Payment details:</b> bKash and Nagad numbers you save, and transaction IDs. We never see or store your PIN or OTP.</li>
+          <li><b>Payment details:</b> Nagad numbers you save, and transaction IDs. We never see or store your PIN or OTP.</li>
           <li><b>Device and notifications:</b> if you allow phone alerts, a push subscription so we can notify you.</li>
         </ul>
       </Section>

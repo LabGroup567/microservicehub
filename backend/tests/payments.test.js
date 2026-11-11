@@ -47,13 +47,13 @@ test('booking status transitions respect who may do what', async () => {
 test('provider payment settings are validated', async () => {
   assert.equal((await t.api('PUT', '/payment-settings', seeker.token, { accepts_cash: true })).status, 403);
   assert.equal((await t.api('PUT', '/payment-settings', provider.token, { accepts_cash: false })).status, 400);
-  assert.equal((await t.api('PUT', '/payment-settings', provider.token, { accepts_cash: true, bkash_number: '123' })).status, 400);
+  assert.equal((await t.api('PUT', '/payment-settings', provider.token, { accepts_cash: true, nagad_number: '123' })).status, 400);
 
-  assert.ok((await t.api('PUT', '/payment-settings', provider.token, { accepts_cash: true, bkash_number: '+8801712345678', nagad_number: '01912345678' })).success);
-  assert.equal((await t.api('GET', '/payment-settings', provider.token)).settings.bkash_number, '01712345678');
+  assert.ok((await t.api('PUT', '/payment-settings', provider.token, { accepts_cash: true, nagad_number: '+8801912345678' })).success);
+  assert.equal((await t.api('GET', '/payment-settings', provider.token)).settings.nagad_number, '01912345678');
 });
 
-test('manual bKash payment: submit, reject, retry with cash, confirm', async () => {
+test('manual Nagad payment: submit, reject, retry with cash, confirm', async () => {
   const fresh = await t.api('POST', '/bookings', other.token, { provider_service_id: listingId, preferred_date: tomorrow(), message: 'Another job' });
   const id = fresh.booking_id;
   const pay = (token, body) => t.api('POST', '/payments', token, { booking_id: id, ...body });
@@ -63,20 +63,20 @@ test('manual bKash payment: submit, reject, retry with cash, confirm', async () 
 
   assert.equal((await pay(seeker.token, { method: 'cash' })).status, 404, 'only the customer can pay');
   assert.equal((await pay(other.token, { method: 'paypal' })).status, 400);
-  assert.equal((await pay(other.token, { method: 'bkash', sender_number: '01811111111' })).status, 400, 'needs TrxID');
-  assert.equal((await pay(other.token, { method: 'bkash', trx_id: TRX })).status, 400, 'needs sender number');
+  assert.equal((await pay(other.token, { method: 'nagad', sender_number: '01811111111' })).status, 400, 'needs TrxID');
+  assert.equal((await pay(other.token, { method: 'nagad', trx_id: TRX })).status, 400, 'needs sender number');
 
   const info = await t.api('GET', `/payments/for?booking_id=${id}`, other.token);
-  assert.equal(info.methods.bkash, '01712345678');
+  assert.equal(info.methods.nagad, '01912345678');
   assert.equal(Number(info.amount), 750);
 
-  const first = await pay(other.token, { method: 'bkash', trx_id: TRX.toLowerCase(), sender_number: '01811111111' });
+  const first = await pay(other.token, { method: 'nagad', trx_id: TRX.toLowerCase(), sender_number: '01811111111' });
   assert.ok(first.success);
   assert.equal((await pay(other.token, { method: 'cash' })).status, 409, 'one open payment at a time');
   assert.equal((await t.api('PATCH', `/payments/${first.payment_id}/confirm`, other.token)).status, 403, 'payer cannot confirm');
 
   assert.ok((await t.api('PATCH', `/payments/${first.payment_id}/reject`, provider.token, { note: 'Not received' })).success);
-  assert.equal((await pay(other.token, { method: 'bkash', trx_id: TRX, sender_number: '01811111111' })).status, 409, 'TrxID cannot be reused');
+  assert.equal((await pay(other.token, { method: 'nagad', trx_id: TRX, sender_number: '01811111111' })).status, 409, 'TrxID cannot be reused');
 
   const cash = await pay(other.token, { method: 'cash' });
   assert.ok((await t.api('PATCH', `/payments/${cash.payment_id}/confirm`, provider.token)).success);
@@ -92,7 +92,7 @@ test('manual bKash payment: submit, reject, retry with cash, confirm', async () 
 });
 
 test('a method the provider does not offer is refused', async () => {
-  await t.api('PUT', '/payment-settings', provider.token, { accepts_cash: true, bkash_number: '01712345678' });
+  await t.api('PUT', '/payment-settings', provider.token, { accepts_cash: true });
   const fresh = await t.api('POST', '/bookings', seeker.token, { provider_service_id: listingId, preferred_date: tomorrow(), message: 'Third job' });
   await t.api('PATCH', `/bookings/${fresh.booking_id}/status`, provider.token, { status: 'accepted' });
 

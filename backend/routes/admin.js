@@ -244,7 +244,7 @@ router.get('/admin/payments', async (req, res) => {
             p.fee_amount, p.discount_amount, p.promo_code, p.charged_amount, p.escrow_status, p.refund_status,
             COALESCE(s.title, ps.title) AS title,
             payer.full_name AS payer_name, payee.full_name AS payee_name,
-            payee.bkash_number AS payee_bkash
+            payee.nagad_number AS payee_nagad
      FROM payments p
      LEFT JOIN services s ON s.id = p.service_id
      LEFT JOIN bookings b ON b.id = p.booking_id
@@ -635,7 +635,7 @@ router.patch('/admin/payments/:id/payout', requireMainAdmin, async (req, res) =>
     payment.payee_id,
     'payout_sent',
     'Your payout was sent',
-    `BDT ${payment.amount} was sent to your bKash number.`,
+    `BDT ${payment.amount} was paid out to you.`,
     '/payments'
   );
 
