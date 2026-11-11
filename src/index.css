@@ -1,0 +1,219 @@
+/* ==========================================================
+   MicroServiceHub — shared design tokens & base styles
+   ========================================================== */
+
+:root {
+  --mh-green: #0b7a5b;
+  --mh-green-hover: #08654a;
+  --mh-dark: #0a3a2d;
+  --mh-light: #e5f6ee;
+  --mh-cream: #f3f8f6;
+  --mh-card: #ffffff;
+  --mh-text: #17231c;
+  --mh-muted: #5f6f66;
+  --mh-border: #d6e6df;
+  --mh-accent: #f2b84b;
+  --mh-danger: #b42318;
+  --mh-danger-bg: #fef3f2;
+  --mh-success: #067647;
+  --mh-success-bg: #ecfdf3;
+  --mh-warning: #b54708;
+  --mh-warning-bg: #fffaeb;
+  --mh-radius: 14px;
+  --mh-teal: #14b8a6;
+  --mh-mint: #7fe0bd;
+  --mh-radius-sm: 10px;
+  --mh-shadow-sm: 0 1px 2px rgba(18, 61, 45, 0.06);
+  --mh-shadow: 0 10px 30px rgba(18, 61, 45, 0.08);
+  --mh-shadow-lg: 0 24px 60px rgba(18, 61, 45, 0.16);
+  --mh-font: Inter, "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--mh-cream);
+  color: var(--mh-text);
+  font-family: var(--mh-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(31, 111, 80, 0.35);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ----------------------------------------------------------
+   Add Work page
+   ---------------------------------------------------------- */
+
+.add-work-page {
+  min-height: 100vh;
+  padding: 48px 16px;
+  background:
+    radial-gradient(900px 400px at 50% -10%, var(--mh-light), transparent),
+    var(--mh-cream);
+}
+
+.add-work-card {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px;
+  background: var(--mh-card);
+  border: 1px solid var(--mh-border);
+  border-radius: 20px;
+  box-shadow: var(--mh-shadow);
+}
+
+.add-work-card h1 {
+  margin: 24px 0 8px;
+  color: var(--mh-dark);
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.add-work-card p {
+  margin: 0;
+  color: var(--mh-muted);
+  line-height: 1.6;
+}
+
+.add-work-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.add-work-card label {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mh-text);
+}
+
+.add-work-card input,
+.add-work-card select,
+.add-work-card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--mh-border);
+  border-radius: var(--mh-radius-sm);
+  background: #fbfdfc;
+  color: var(--mh-text);
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.add-work-card textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.add-work-card input:focus,
+.add-work-card select:focus,
+.add-work-card textarea:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--mh-green);
+  box-shadow: 0 0 0 4px rgba(31, 111, 80, 0.14);
+}
+
+.add-work-card button {
+  margin-top: 16px;
+  padding: 13px 20px;
+  border: none;
+  border-radius: var(--mh-radius-sm);
+  background: var(--mh-green);
+  color: #fff;
+  font-weight: 700;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.add-work-card button:hover:not(:disabled) {
+  background: var(--mh-green-hover);
+  transform: translateY(-1px);
+}
+
+.add-work-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.add-work-card .back-button {
+  margin-top: 0;
+  padding: 8px 14px;
+  background: var(--mh-light);
+  color: var(--mh-dark);
+  font-size: 0.9rem;
+}
+
+.add-work-card .back-button:hover:not(:disabled) {
+  background: #d6ebe0;
+}
+
+.form-hint {
+  font-size: 0.85rem;
+  color: var(--mh-muted);
+}
+
+.form-error,
+.form-success {
+  padding: 12px 14px;
+  border-radius: var(--mh-radius-sm);
+  font-size: 0.92rem;
+}
+
+.form-error {
+  background: var(--mh-danger-bg);
+  color: var(--mh-danger) !important;
+  border: 1px solid #fecdca;
+}
+
+.form-success {
+  background: var(--mh-success-bg);
+  color: var(--mh-success) !important;
+  border: 1px solid #abefc6;
+}
+
+@media (max-width: 600px) {
+  .add-work-page {
+    padding: 24px 12px;
+  }
+
+  .add-work-card {
+    padding: 24px 18px;
+  }
+}

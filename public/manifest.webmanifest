@@ -1,0 +1,12 @@
+{
+  "name": "MicroServiceHub",
+  "short_name": "ServiceHub",
+  "description": "Post tasks, hire local providers, chat, track and pay.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f8f6",
+  "theme_color": "#1f6f50",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

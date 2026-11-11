@@ -1,0 +1,239 @@
+/* ==========================================================
+   Phone refinements for the newer screens. Loaded last.
+   ========================================================== */
+
+@media (max-width: 720px) {
+  /* The tab bar sits at the bottom, so floating things sit above it. */
+  .call {
+    bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  .toast {
+    top: 70px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+  }
+
+  /* Footer links are easy to hit with a thumb. */
+  .footer-links {
+    gap: 0 18px;
+  }
+
+  .footer-links button {
+    min-height: 40px;
+    padding: 8px 0;
+  }
+
+  .nav-icon,
+  .nav-toggle {
+    min-width: 42px;
+    min-height: 42px;
+  }
+
+  /* Filters: search on top, the rest two to a row. */
+  .filters,
+  .filters.compact,
+  .filters.two {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .filters > :first-child,
+  .filters > .btn,
+  .filters > .check-field {
+    grid-column: 1 / -1;
+  }
+
+  /* Card buttons: two to a row, big enough to tap. */
+  .card-actions {
+    gap: 8px;
+  }
+
+  .card-actions .btn {
+    flex: 1 1 calc(50% - 8px);
+    min-height: 44px;
+  }
+
+  /* Wide tables scroll sideways inside their own box, and say so. */
+  .table-wrap {
+    -webkit-overflow-scrolling: touch;
+    background:
+      linear-gradient(90deg, var(--mh-card) 30%, transparent) left center / 24px 100% no-repeat local,
+      linear-gradient(270deg, var(--mh-card) 30%, transparent) right center / 24px 100% no-repeat local,
+      linear-gradient(90deg, rgba(0, 0, 0, 0.12), transparent) left center / 10px 100% no-repeat scroll,
+      linear-gradient(270deg, rgba(0, 0, 0, 0.12), transparent) right center / 10px 100% no-repeat scroll,
+      var(--mh-card);
+  }
+
+  .table th,
+  .table td {
+    padding: 10px 12px;
+  }
+
+  /* Show/Hide password buttons */
+  .mh-register-toggle,
+  .mh-password-toggle {
+    min-width: 48px;
+    min-height: 40px;
+  }
+
+  /* Public pages */
+  .pub-nav-inner {
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  .pub-nav .nav-brand span {
+    font-size: 0.95rem;
+  }
+
+  .pub-main {
+    padding: 24px 0 40px;
+  }
+
+  .pub-card {
+    padding: 18px;
+  }
+
+  .land-cta .btn {
+    flex: 1 1 100%;
+    min-height: 46px;
+  }
+
+  .land-final {
+    padding: 26px 18px;
+  }
+
+  .land-cats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pub-footer nav {
+    gap: 0 16px;
+  }
+
+  .pub-footer a {
+    display: inline-block;
+    padding: 8px 0;
+  }
+
+  /* Earnings chart: smaller labels so six months fit. */
+  .earn-chart {
+    gap: 6px;
+    height: 190px;
+  }
+
+  .earn-value {
+    font-size: 0.62rem;
+  }
+
+  /* Calendar cells stay thumb sized. */
+  .cal {
+    padding: 10px;
+  }
+
+  .cal-day {
+    min-height: 40px;
+  }
+
+  /* Getting started */
+  .start {
+    padding: 14px;
+  }
+
+  .promo-row input {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .pub-cta .btn-ghost {
+    display: none;
+  }
+
+  .land-cats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================
+   Real phones: browser quirks that a desktop window never shows
+   ========================================================== */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* No 300 ms wait or accidental double-tap zoom on buttons and fields. */
+a,
+button,
+input,
+select,
+textarea,
+label,
+[role='button'] {
+  touch-action: manipulation;
+}
+
+body {
+  overflow-wrap: break-word;
+}
+
+/* 100vh is taller than what a phone really shows (the address bar). dvh follows the visible area. */
+@supports (min-height: 100dvh) {
+  body,
+  .pub,
+  .mh-page,
+  .app-main,
+  .mh-login-page,
+  .mh-login-visual,
+  .mh-register-page,
+  .add-work-page,
+  .auth-shell {
+    min-height: 100dvh;
+  }
+}
+
+@media (max-width: 720px) {
+  /* While someone types, the on-screen keyboard needs the room. */
+  body:has(input:focus, textarea:focus, select:focus) .tabbar {
+    display: none;
+  }
+
+  /* Long words, emails and links never push the screen wider. */
+  .card,
+  .panel,
+  .modal,
+  .table td,
+  .pub-main,
+  .chat-pane {
+    overflow-wrap: anywhere;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  .live-map,
+  .leaflet-container {
+    max-width: 100%;
+  }
+}
+
+/* The login screen ends its entrance animation slightly zoomed in, which made the page about 3 px
+   wider than a small phone and let it wobble sideways. Anything that spills out is simply cut. */
+.mh-login-page,
+.mh-register-page {
+  overflow-x: clip;
+}
+
+html,
+body {
+  overflow-x: clip;
+}

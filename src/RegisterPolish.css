@@ -1,0 +1,484 @@
+/* ==========================================================
+   Create account: same font and colours as the sign-in page, and text that is easy to read.
+   The layout is the original one.
+   ========================================================== */
+
+/* ----- font and colours, shared with the sign-in page ----- */
+
+.mh-register-page {
+  --reg-green: var(--mh-green);
+  --reg-green-dark: var(--mh-dark);
+  --reg-green-light: #e6f2ea;
+  --reg-cream: #f6faf7;
+  --reg-text: var(--mh-text);
+  --reg-muted: var(--mh-muted);
+  --reg-border: var(--mh-border);
+
+  font-family: 'DM Sans', sans-serif;
+  background:
+    radial-gradient(ellipse at 8% 48%, #e1f0e7 0%, transparent 40%),
+    radial-gradient(ellipse at 95% 8%, #f4ecd4 0%, transparent 34%),
+    #f6faf7;
+}
+
+.mh-register-page h1,
+.mh-register-page h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.mh-register-title h2 {
+  color: #172c20;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mh-register-input-wrap {
+  background: #fff;
+}
+
+.mh-register-input-wrap input {
+  color: #23392b;
+}
+
+.mh-register-input-wrap input::placeholder {
+  color: #a8b2aa;
+}
+
+.mh-register-input-wrap:focus-within {
+  border-color: #4b946b;
+  box-shadow: 0 0 0 3px rgba(37, 132, 84, 0.14);
+}
+
+.mh-register-input-icon {
+  color: #87978b;
+}
+
+.mh-register-role-option.is-selected {
+  border-color: var(--mh-green);
+  background: #f1f8f3;
+}
+
+.mh-register-submit {
+  border-color: var(--mh-green);
+  background: linear-gradient(110deg, #176442, #258454);
+  box-shadow: 0 8px 18px rgba(23, 100, 66, 0.16);
+}
+
+.mh-register-submit:hover:not(:disabled) {
+  background: linear-gradient(110deg, #176442, #258454);
+  box-shadow: 0 11px 24px rgba(23, 100, 66, 0.26);
+  transform: translateY(-2px);
+}
+
+/* ----- text size: it was 9 to 12px, now readable ----- */
+
+.mh-register-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 560px);
+  align-items: start;
+}
+
+/* The welcome text stays in view while the long form scrolls. */
+.mh-register-intro {
+  position: sticky;
+  top: 90px;
+  padding-top: 40px;
+}
+
+.mh-register-eyebrow {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+}
+
+.mh-register-intro-text {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.mh-register-benefit strong {
+  font-size: 16px;
+}
+
+.mh-register-benefit p {
+  font-size: 14px;
+}
+
+.mh-register-quote p {
+  font-size: 15px;
+}
+
+.mh-register-card {
+  padding: 40px;
+  border-radius: 24px;
+}
+
+.mh-register-step {
+  font-size: 11px;
+  letter-spacing: 1.3px;
+}
+
+.mh-register-card-top {
+  margin-bottom: 14px;
+}
+
+.mh-register-title h2 {
+  font-size: clamp(28px, 2.6vw, 36px);
+}
+
+.mh-register-title p {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.mh-register-form {
+  gap: 20px;
+}
+
+.mh-register-field > label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mh-register-optional {
+  font-size: 11px;
+}
+
+.mh-register-input-wrap {
+  min-height: 54px;
+  border-radius: 13px;
+}
+
+.mh-register-input-wrap input,
+.mh-register-input-wrap select {
+  min-height: 52px;
+  font-size: 15px;
+}
+
+.mh-register-input-wrap input::placeholder {
+  font-size: 15px;
+}
+
+.mh-register-toggle {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mh-register-role-option {
+  min-height: 96px;
+  padding: 16px 14px;
+  border-radius: 14px;
+}
+
+.mh-register-role-symbol {
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+}
+
+.mh-register-role-copy strong {
+  font-size: 15px;
+}
+
+.mh-register-role-copy small {
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.mh-register-role-check {
+  font-size: 13px;
+}
+
+.mh-register-error p {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+label.mh-register-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+label.mh-register-terms input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: #1b704a;
+}
+
+p.mh-register-terms {
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.mh-register-submit {
+  min-height: 56px;
+  border-radius: 14px;
+  font-size: 16px;
+}
+
+.mh-register-bottom {
+  font-size: 14px;
+}
+
+.mh-register-header-note {
+  font-size: 14px;
+}
+
+.mh-register-footer {
+  font-size: 13px;
+}
+
+@media (max-width: 1000px) {
+  .mh-register-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mh-register-intro {
+    position: static;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .mh-register-card {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+
+  /* 16px stops iPhones from zooming in when a field is tapped. */
+  .mh-register-input-wrap input,
+  .mh-register-input-wrap select,
+  .mh-register-input-wrap input::placeholder {
+    font-size: 16px;
+  }
+
+  .mh-register-role-options {
+    gap: 10px;
+  }
+
+  .mh-register-role-option {
+    min-height: 88px;
+    padding: 14px 12px;
+  }
+}
+
+/* ==========================================================
+   The whole page is green, and the form card stays white
+   ========================================================== */
+
+.mh-register-page {
+  background:
+    radial-gradient(ellipse at 82% 62%, #246044 0%, transparent 42%),
+    radial-gradient(ellipse at 8% 10%, #1b5539 0%, transparent 38%),
+    linear-gradient(145deg, #123d2b, #0b2b1e 70%, #071d14);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.mh-register-decoration {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* top bar */
+
+.mh-register-header,
+.mh-register-footer {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.mh-register-brand {
+  color: #fff;
+}
+
+.mh-register-brand-accent {
+  color: #e8cf8f;
+}
+
+.mh-register-header-note,
+.mh-register-footer {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.mh-register-header-note a {
+  color: #e8cf8f;
+}
+
+/* welcome text on the left */
+
+.mh-register-intro {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.mh-register-eyebrow {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.mh-register-intro h1 {
+  color: #fff;
+}
+
+.mh-register-intro h1 span {
+  color: #e8cf8f;
+}
+
+.mh-register-intro-text {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.mh-register-benefit-icon {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #e8cf8f;
+}
+
+.mh-register-benefit strong {
+  color: #fff;
+}
+
+.mh-register-benefit p {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.mh-register-quote {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.mh-register-quote p {
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.mh-register-quote-mark {
+  color: #e8cf8f;
+}
+
+.mh-register-quote-line {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* the form card is white, with a soft shadow that lifts it off the green */
+
+.mh-register-card {
+  background: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.55);
+}
+
+/* ==========================================================
+   A smaller form card
+   ========================================================== */
+
+.mh-register-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 450px);
+  gap: clamp(36px, 6vw, 90px);
+}
+
+.mh-register-card {
+  padding: 30px 30px 26px;
+  border-radius: 20px;
+}
+
+.mh-register-card-top {
+  margin-bottom: 8px;
+}
+
+.mh-register-title {
+  margin-bottom: 4px;
+}
+
+.mh-register-title h2 {
+  font-size: clamp(24px, 2.1vw, 30px);
+}
+
+.mh-register-title p {
+  font-size: 14px;
+}
+
+.mh-register-form {
+  gap: 14px;
+}
+
+.mh-register-field > label {
+  font-size: 13px;
+}
+
+.mh-register-input-wrap {
+  min-height: 46px;
+  border-radius: 11px;
+}
+
+.mh-register-input-wrap input,
+.mh-register-input-wrap select {
+  min-height: 44px;
+  font-size: 14px;
+}
+
+.mh-register-input-wrap input::placeholder {
+  font-size: 14px;
+}
+
+.mh-register-role-option {
+  min-height: 78px;
+  padding: 12px 11px;
+  border-radius: 12px;
+}
+
+.mh-register-role-symbol {
+  width: 30px;
+  height: 30px;
+  font-size: 17px;
+}
+
+.mh-register-role-copy strong {
+  font-size: 14px;
+}
+
+.mh-register-role-copy small {
+  font-size: 12px;
+}
+
+label.mh-register-terms {
+  font-size: 13px;
+}
+
+p.mh-register-terms {
+  font-size: 12px;
+}
+
+.mh-register-submit {
+  min-height: 48px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.mh-register-bottom {
+  padding-top: 14px;
+  font-size: 13px;
+}
+
+@media (max-width: 1000px) {
+  .mh-register-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mh-register-card {
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 760px) {
+  .mh-register-card {
+    max-width: none;
+    padding: 22px 18px;
+  }
+
+  /* 16px stops iPhones from zooming in when a field is tapped. */
+  .mh-register-input-wrap input,
+  .mh-register-input-wrap select,
+  .mh-register-input-wrap input::placeholder {
+    font-size: 16px;
+  }
+}
