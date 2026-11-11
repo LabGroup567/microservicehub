@@ -4,7 +4,7 @@ A web marketplace for everyday services in Bangladesh. People who need a job don
 
 Live demo: https://microservicehub.onrender.com (free hosting, the first load can take up to a minute)
 
-Course project: CSE 3208, Software Development Project I.
+Course project: CSE 3206, Software Engineering Laboratory.
 
 ## What it does
 
