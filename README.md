@@ -13,6 +13,8 @@ A web marketplace where people hire trusted help for everyday jobs and reach eme
 ![MySQL](https://img.shields.io/badge/MySQL-TiDB%20Cloud-00758f?logo=mysql&logoColor=white)
 ![Socket.IO](https://img.shields.io/badge/Socket.IO-realtime-010101?logo=socket.io&logoColor=white)
 
+[![CI](https://github.com/LabGroup567/microservicehub/actions/workflows/ci.yml/badge.svg)](https://github.com/LabGroup567/microservicehub/actions/workflows/ci.yml)
+
 ![Home](docs/screenshots/home.jpg)
 
 </div>
