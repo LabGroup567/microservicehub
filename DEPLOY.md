@@ -1,7 +1,5 @@
 # Putting MicroServiceHub online
 
-**Using your own hosting panel with a Node.js application form (like Diana Host's "Self Managed" apps)? Follow [DIANA-HOSTING.md](DIANA-HOSTING.md): it has the exact form values, and the ready-made package is `release/microservicehu-app.zip`.** The rest of this page covers free Node hosts.
-
 # Free hosting options
 
 The whole project (website + API + live chat) is **one Node.js app**. The backend serves the built website, so you need only:

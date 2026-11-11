@@ -54,7 +54,6 @@ Course project: CSE 3208, Software Development Project I.
 │   └── scripts/         create-admin, backup, restore
 ├── render.yaml          Render deployment blueprint
 ├── DEPLOY.md            step by step deployment guide
-└── DIANA-HOSTING.md     notes for another hosting provider
 ```
 
 ## Run it locally
