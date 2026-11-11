@@ -117,6 +117,3 @@ The project deploys as one Render web service (the Express server also serves th
 - The interface is in English only.
 - The free hosting sleeps when idle.
 
-## Team
-
-Group: LabGroup567
